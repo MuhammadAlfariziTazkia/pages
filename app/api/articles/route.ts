@@ -3,15 +3,27 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const categoryId = searchParams.get('category_id')
+
   try {
-    return new Response(JSON.stringify(formattingResponse(await prisma.article.findMany())), {
+    // Tanpa filter jika category_id tidak ada
+    const articles = categoryId
+      ? await prisma.article.findMany({
+          where: {
+            "category_id": BigInt(categoryId),
+          },
+        })
+      : await prisma.article.findMany()
+
+    return new Response(JSON.stringify(formattingResponse(articles)), {
       headers: { 'Content-Type': 'application/json' },
       status: 200,
     })
   } catch (error) {
-    console.log(error)
-    return new Response(JSON.stringify({ error: 'Failed to fetch categories' }), {
+    console.error(error)
+    return new Response(JSON.stringify({ error: 'Failed to fetch articles' }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500,
     })

@@ -46,7 +46,6 @@ export default function Portfolio() {
   const [skills, setSkills] = useState<any[]>([]);
   const [workExperiences, setWorkExperiences] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
-  const [education, setEducation] = useState<any[]>([]);
   const [articleCategories, setArticleCategories] = useState<any[]>([]);
   const [articles, setArticles] = useState<any[]>([]);
 
@@ -61,14 +60,12 @@ export default function Portfolio() {
         skillsRes,
         workExpRes,
         projectsRes,
-        educationRes,
         categoriesRes,
         articlesRes,
       ] = await Promise.all([
         fetch("/api/skills"),
         fetch("/api/work-experiences"),
         fetch("/api/projects"),
-        fetch("/api/education"),
         fetch("/api/article-categories"),
         fetch("/api/articles"),
       ]);
@@ -77,14 +74,12 @@ export default function Portfolio() {
         skillsData,
         workExpData,
         projectsData,
-        educationData,
         categoriesData,
         articlesData,
       ] = await Promise.all([
         skillsRes.json(),
         workExpRes.json(),
         projectsRes.json(),
-        educationRes.json(),
         categoriesRes.json(),
         articlesRes.json(),
       ]);
@@ -92,7 +87,6 @@ export default function Portfolio() {
       setSkills(skillsData);
       setWorkExperiences(workExpData);
       setProjects(projectsData);
-      setEducation(educationData);
       setArticleCategories(categoriesData);
       setArticles(articlesData);
     } catch (error) {

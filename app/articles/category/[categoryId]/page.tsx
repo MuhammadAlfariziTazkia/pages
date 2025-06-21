@@ -1,33 +1,43 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { ArrowLeft, Calendar, Clock, User } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { useLanguage } from "@/contexts/language-context"
-import { getArticlesByCategory, articleCategories } from "@/data/articles"
-import Link from "next/link"
-import { useParams } from "next/navigation"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/language-context";
+import { getArticlesByCategory, articleCategories } from "@/data/articles";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function CategoryPage() {
-  const params = useParams()
-  const categoryId = params.categoryId as string
-  const { language } = useLanguage()
-  const [articles, setArticles] = useState<any[]>([])
-  const [category, setCategory] = useState<any>(null)
+  const params = useParams();
+  const categoryId = params.categoryId as string;
+  const { language } = useLanguage();
+  const [articles, setArticles] = useState<any[]>([]);
+  const [category, setCategory] = useState<any>(null);
 
   useEffect(() => {
     if (categoryId) {
-      const categoryArticles = getArticlesByCategory(categoryId)
-      const categoryInfo = articleCategories.find((cat) => cat.id === categoryId)
-      setArticles(categoryArticles)
-      setCategory(categoryInfo)
+      loadCategory();
+      loadArticles();
     }
-  }, [categoryId])
+  }, [categoryId]);
+
+  const loadArticles = async () => {
+    setArticles(
+      await (await fetch("/api/articles?category_id=" + categoryId)).json()
+    );
+  };
+
+  const loadCategory = async () => {
+    setCategory(
+      await (await fetch("/api/article-categories/" + categoryId)).json()
+    );
+  };
 
   if (!category) {
-    return <div>Category not found</div>
+    return <div>Category not found</div>;
   }
 
   return (
@@ -36,7 +46,11 @@ export default function CategoryPage() {
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Link href="/articles">
-            <Button variant="ghost" size="sm" className="text-cyan-400 hover:text-cyan-300">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-cyan-400 hover:text-cyan-300"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Articles
             </Button>
@@ -50,12 +64,18 @@ export default function CategoryPage() {
           className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-4 mb-4">
-            <div className={`p-4 rounded-full ${category.color} text-white text-3xl`}>{category.icon}</div>
+            <div
+              className={`p-4 rounded-full ${category.color} text-white text-3xl`}
+            >
+              {category.icon}
+            </div>
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              {category.name[language]}
+              {language == "en" ? category.name_en : category.name_jp}
             </h1>
           </div>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">{category.description[language]}</p>
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            {language == "en" ? category.description_en : category.description_id}
+          </p>
         </motion.div>
 
         {/* Articles Grid */}
@@ -73,12 +93,12 @@ export default function CategoryPage() {
                   <CardContent className="p-0">
                     <img
                       src={article.thumbnail || "/placeholder.svg"}
-                      alt={article.title[language]}
+                      alt={language == "en" ? article.title_en : article.title_jp}
                       className="w-full h-48 object-cover rounded-t-lg"
                     />
                     <div className="p-6">
                       <h3 className="text-lg font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors mb-2 line-clamp-2">
-                        {article.title[language]}
+                        {language == "en" ? article.title_en : article.title_jp}
                       </h3>
 
                       <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
@@ -96,7 +116,9 @@ export default function CategoryPage() {
                         </div>
                       </div>
 
-                      <p className="text-sm text-gray-300 line-clamp-3">{article.description[language]}</p>
+                      <p className="text-sm text-gray-300 line-clamp-3">
+                        {language == "en" ? article.description_en : article.description_jp}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -107,10 +129,12 @@ export default function CategoryPage() {
 
         {articles.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-400">No articles found in this category yet.</p>
+            <p className="text-gray-400">
+              No articles found in this category yet.
+            </p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
