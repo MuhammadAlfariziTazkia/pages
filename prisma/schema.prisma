@@ -1,0 +1,111 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ArticleCategory {
+  id             BigInt    @id @default(autoincrement())
+  name_en        String?   @db.VarChar(255)
+  name_jp        String?   @db.VarChar(255)
+  slug           String?   @db.VarChar(255)
+  description_en String?   @db.Text
+  description_jp String?   @db.Text
+  icon           String?   @db.VarChar(255)
+  color          String?   @db.VarChar(255)
+  inserted_at    DateTime  @db.Timestamp(0)
+  updated_at     DateTime  @db.Timestamp(0)
+
+  articles       Article[] @relation("CategoryArticles")
+  @@map("article_categories")
+}
+
+model Education {
+  id               BigInt   @id @default(autoincrement())
+  institution_name  String?  @db.VarChar(255)
+  degree_en        String?  @db.VarChar(255)
+  degree_jp        String?  @db.VarChar(255)
+  period           String?  @db.VarChar(255)
+  gpa              String?  @db.VarChar(255)
+  description_en   String?  @db.Text
+  description_jp   String?  @db.Text
+  certificate_url  String?  @db.VarChar(255)
+  transcript_url   String?  @db.VarChar(255)
+  icon             String?  @db.VarChar(255)
+  inserted_at      DateTime @db.Timestamp(0)
+  updated_at       DateTime @db.Timestamp(0)
+  @@map("education")
+}
+
+model Project {
+  id            BigInt   @id @default(autoincrement())
+  title         String?  @db.VarChar(255)
+  role_en       String?  @db.VarChar(255)
+  role_jp       String?  @db.VarChar(255)
+  description_en String? @db.Text
+  description_jp String? @db.Text
+  project_url   String?  @db.VarChar(255)
+  is_public     Boolean  @default(false)
+  inserted_at   DateTime @db.Timestamp(0)
+  updated_at    DateTime @db.Timestamp(0)
+
+  @@map("projects")
+}
+
+model Article {
+  id             BigInt         @id @default(autoincrement())
+  title_en       String?        @db.VarChar(255)
+  title_jp       String?        @db.VarChar(255)
+  slug           String?        @db.VarChar(255)  @unique
+  description_en String?        @db.Text
+  description_jp String?        @db.Text
+  content_en     String?        @db.Text
+  content_jp     String?        @db.Text
+  thumbnail      String?        @db.VarChar(255)
+  published_date DateTime?      
+  read_time      Int?           
+  category_id    BigInt?        
+
+  inserted_at    DateTime       @db.Timestamp(0)
+  updated_at     DateTime       @db.Timestamp(0)
+
+  category       ArticleCategory? @relation("CategoryArticles", fields: [category_id], references: [id])
+  @@map("articles")
+}
+
+model Skill {
+  id          BigInt   @id @default(autoincrement())
+  name        String?  @db.VarChar(255)
+  icon        String?  @db.VarChar(255)
+  color       String?  @db.VarChar(255)
+  inserted_at DateTime @db.Timestamp(0)
+  updated_at  DateTime @db.Timestamp(0)
+
+  @@map("skills")
+}
+
+model WorkExperience {
+  id                      BigInt   @id @default(autoincrement())
+  company                 String?  @db.VarChar(255)
+  position_en             String?  @db.VarChar(255)
+  position_jp             String?  @db.VarChar(255)
+  period                  String?  @db.VarChar(255)
+  type_en                 String?  @db.VarChar(255)
+  type_jp                 String?  @db.VarChar(255)
+  logo                    String?  @db.VarChar(255)
+  description_en          String?  @db.Text
+  description_jp          String?  @db.Text
+  key_achievements_en     String?  @db.Text
+  key_achievements_jp     String?  @db.Text
+  full_description_en     String?  @db.Text
+  full_description_jp     String?  @db.Text
+  detailed_achievements_en String? @db.Text
+  detailed_achievements_jp String? @db.Text
+  inserted_at             DateTime @db.Timestamp(0)
+  updated_at              DateTime @db.Timestamp(0)
+
+  @@map("work_experiences")
+}

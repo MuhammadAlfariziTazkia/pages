@@ -1,0 +1,1464 @@
+# Portfolio Website API Contracts
+# OpenAPI 3.0 Specification
+
+openapi: 3.0.3
+info:
+  title: Portfolio Website API
+  description: RESTful API for managing portfolio website content
+  version: 1.0.0
+  contact:
+    name: Muhammad Alfarizi Tazkia
+    email: muhammadalfarizi.t@gmail.com
+
+servers:
+  - url: https://api.portfolio.com/v1
+    description: Production server
+  - url: http://localhost:8080/v1
+    description: Development server
+
+paths:
+  # Authentication
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+
+  /auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Refresh access token
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+
+  # Personal Info
+  /personal-info:
+    get:
+      tags: [Personal Info]
+      summary: Get personal information
+      responses:
+        '200':
+          description: Personal information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInfo'
+    
+    put:
+      tags: [Personal Info]
+      summary: Update personal information
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalInfoInput'
+      responses:
+        '200':
+          description: Personal information updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInfo'
+
+  # Skills
+  /skills:
+    get:
+      tags: [Skills]
+      summary: Get all skills
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of skills
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+    
+    post:
+      tags: [Skills]
+      summary: Create new skill
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillInput'
+      responses:
+        '201':
+          description: Skill created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+
+  /skills/{id}:
+    put:
+      tags: [Skills]
+      summary: Update skill
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillInput'
+      responses:
+        '200':
+          description: Skill updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+    
+    delete:
+      tags: [Skills]
+      summary: Delete skill
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Skill deleted
+
+  # Work Experiences
+  /work-experiences:
+    get:
+      tags: [Work Experiences]
+      summary: Get all work experiences
+      parameters:
+        - name: is_current
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of work experiences
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkExperience'
+    
+    post:
+      tags: [Work Experiences]
+      summary: Create new work experience
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkExperienceInput'
+      responses:
+        '201':
+          description: Work experience created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkExperience'
+
+  /work-experiences/{id}:
+    get:
+      tags: [Work Experiences]
+      summary: Get work experience by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Work experience details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkExperience'
+    
+    put:
+      tags: [Work Experiences]
+      summary: Update work experience
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkExperienceInput'
+      responses:
+        '200':
+          description: Work experience updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkExperience'
+    
+    delete:
+      tags: [Work Experiences]
+      summary: Delete work experience
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Work experience deleted
+
+  # Projects
+  /projects:
+    get:
+      tags: [Projects]
+      summary: Get all projects
+      parameters:
+        - name: is_featured
+          in: query
+          schema:
+            type: boolean
+        - name: is_public
+          in: query
+          schema:
+            type: boolean
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [in_progress, completed, on_hold]
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    
+    post:
+      tags: [Projects]
+      summary: Create new project
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /projects/{slug}:
+    get:
+      tags: [Projects]
+      summary: Get project by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    
+    put:
+      tags: [Projects]
+      summary: Update project
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    
+    delete:
+      tags: [Projects]
+      summary: Delete project
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Project deleted
+
+  # Articles
+  /articles:
+    get:
+      tags: [Articles]
+      summary: Get all published articles
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: tag
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [published_at, views_count, title]
+            default: published_at
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: List of articles with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArticleSummary'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    
+    post:
+      tags: [Articles]
+      summary: Create new article
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleInput'
+      responses:
+        '201':
+          description: Article created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+
+  /articles/{slug}:
+    get:
+      tags: [Articles]
+      summary: Get article by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Article details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+    
+    put:
+      tags: [Articles]
+      summary: Update article
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleInput'
+      responses:
+        '200':
+          description: Article updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+    
+    delete:
+      tags: [Articles]
+      summary: Delete article
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Article deleted
+
+  /articles/{slug}/views:
+    post:
+      tags: [Articles]
+      summary: Increment article view count
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: View count incremented
+
+  # Article Categories
+  /article-categories:
+    get:
+      tags: [Article Categories]
+      summary: Get all article categories
+      parameters:
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of article categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArticleCategory'
+    
+    post:
+      tags: [Article Categories]
+      summary: Create new article category
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleCategoryInput'
+      responses:
+        '201':
+          description: Article category created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleCategory'
+
+  /article-categories/{slug}:
+    get:
+      tags: [Article Categories]
+      summary: Get category with articles
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Category with articles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    $ref: '#/components/schemas/ArticleCategory'
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArticleSummary'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  # Education
+  /education:
+    get:
+      tags: [Education]
+      summary: Get all education records
+      responses:
+        '200':
+          description: List of education records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Education'
+    
+    post:
+      tags: [Education]
+      summary: Create new education record
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EducationInput'
+      responses:
+        '201':
+          description: Education record created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Education'
+
+  # Contact
+  /contact:
+    post:
+      tags: [Contact]
+      summary: Send contact message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactMessageInput'
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactMessage'
+
+  # Newsletter
+  /newsletter/subscribe:
+    post:
+      tags: [Newsletter]
+      summary: Subscribe to newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                name:
+                  type: string
+              required: [email]
+      responses:
+        '201':
+          description: Subscribed successfully
+
+  # Analytics
+  /analytics/track:
+    post:
+      tags: [Analytics]
+      summary: Track analytics event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsEvent'
+      responses:
+        '201':
+          description: Event tracked
+
+  # File Upload
+  /upload:
+    post:
+      tags: [Files]
+      summary: Upload file
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                folder:
+                  type: string
+                  enum: [profile, projects, articles, documents]
+      responses:
+        '200':
+          description: File uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  filename:
+                    type: string
+                  size:
+                    type: integer
+                  mime_type:
+                    type: string
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    PersonalInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name_en:
+          type: string
+        name_ja:
+          type: string
+        title_en:
+          type: string
+        title_ja:
+          type: string
+        bio_en:
+          type: string
+        bio_ja:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        location:
+          type: string
+        profile_image_url:
+          type: string
+        cv_url_en:
+          type: string
+        cv_url_ja:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    PersonalInfoInput:
+      type: object
+      properties:
+        name_en:
+          type: string
+        name_ja:
+          type: string
+        title_en:
+          type: string
+        title_ja:
+          type: string
+        bio_en:
+          type: string
+        bio_ja:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        location:
+          type: string
+        profile_image_url:
+          type: string
+        cv_url_en:
+          type: string
+        cv_url_ja:
+          type: string
+      required: [name_en, name_ja, title_en, title_ja, bio_en, bio_ja, email]
+
+    Skill:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        icon:
+          type: string
+        color:
+          type: string
+        category:
+          type: string
+        proficiency_level:
+          type: integer
+          minimum: 1
+          maximum: 5
+        is_active:
+          type: boolean
+        sort_order:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    SkillInput:
+      type: object
+      properties:
+        name:
+          type: string
+        icon:
+          type: string
+        color:
+          type: string
+        category:
+          type: string
+        proficiency_level:
+          type: integer
+          minimum: 1
+          maximum: 5
+        is_active:
+          type: boolean
+        sort_order:
+          type: integer
+      required: [name]
+
+    Company:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        logo_url:
+          type: string
+        website_url:
+          type: string
+        industry:
+          type: string
+        location:
+          type: string
+
+    WorkExperience:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        company:
+          $ref: '#/components/schemas/Company'
+        position_en:
+          type: string
+        position_ja:
+          type: string
+        employment_type:
+          type: string
+          enum: [full_time, part_time, contract, internship]
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        is_current:
+          type: boolean
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        key_achievements_en:
+          type: array
+          items:
+            type: string
+        key_achievements_ja:
+          type: array
+          items:
+            type: string
+        detailed_contributions_en:
+          type: array
+          items:
+            type: string
+        detailed_contributions_ja:
+          type: array
+          items:
+            type: string
+        technologies_used:
+          type: array
+          items:
+            type: string
+        sort_order:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    WorkExperienceInput:
+      type: object
+      properties:
+        company_id:
+          type: string
+          format: uuid
+        position_en:
+          type: string
+        position_ja:
+          type: string
+        employment_type:
+          type: string
+          enum: [full_time, part_time, contract, internship]
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        is_current:
+          type: boolean
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        key_achievements_en:
+          type: array
+          items:
+            type: string
+        key_achievements_ja:
+          type: array
+          items:
+            type: string
+        detailed_contributions_en:
+          type: array
+          items:
+            type: string
+        detailed_contributions_ja:
+          type: array
+          items:
+            type: string
+        technologies_used:
+          type: array
+          items:
+            type: string
+        sort_order:
+          type: integer
+      required: [company_id, position_en, position_ja, start_date]
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        slug:
+          type: string
+        role_en:
+          type: string
+        role_ja:
+          type: string
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        technologies_used:
+          type: array
+          items:
+            type: string
+        project_url:
+          type: string
+        github_url:
+          type: string
+        demo_url:
+          type: string
+        is_public:
+          type: boolean
+        is_featured:
+          type: boolean
+        thumbnail_url:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [in_progress, completed, on_hold]
+        sort_order:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ProjectInput:
+      type: object
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+        role_en:
+          type: string
+        role_ja:
+          type: string
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        technologies_used:
+          type: array
+          items:
+            type: string
+        project_url:
+          type: string
+        github_url:
+          type: string
+        demo_url:
+          type: string
+        is_public:
+          type: boolean
+        is_featured:
+          type: boolean
+        thumbnail_url:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [in_progress, completed, on_hold]
+        sort_order:
+          type: integer
+      required: [title, slug, role_en, role_ja, description_en, description_ja]
+
+    ArticleCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name_en:
+          type: string
+        name_ja:
+          type: string
+        slug:
+          type: string
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        icon:
+          type: string
+        color:
+          type: string
+        article_count:
+          type: integer
+        is_active:
+          type: boolean
+        sort_order:
+          type: integer
+
+    ArticleCategoryInput:
+      type: object
+      properties:
+        name_en:
+          type: string
+        name_ja:
+          type: string
+        slug:
+          type: string
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        icon:
+          type: string
+        color:
+          type: string
+        is_active:
+          type: boolean
+        sort_order:
+          type: integer
+      required: [name_en, name_ja, slug]
+
+    Article:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title_en:
+          type: string
+        title_ja:
+          type: string
+        slug:
+          type: string
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        content_en:
+          type: string
+        content_ja:
+          type: string
+        category:
+          $ref: '#/components/schemas/ArticleCategory'
+        author:
+          $ref: '#/components/schemas/User'
+        thumbnail_url:
+          type: string
+        is_published:
+          type: boolean
+        is_featured:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+        read_time:
+          type: integer
+        views_count:
+          type: integer
+        likes_count:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+        meta_title_en:
+          type: string
+        meta_title_ja:
+          type: string
+        meta_description_en:
+          type: string
+        meta_description_ja:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ArticleSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title_en:
+          type: string
+        title_ja:
+          type: string
+        slug:
+          type: string
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        category:
+          $ref: '#/components/schemas/ArticleCategory'
+        author:
+          $ref: '#/components/schemas/User'
+        thumbnail_url:
+          type: string
+        published_at:
+          type: string
+          format: date-time
+        read_time:
+          type: integer
+        views_count:
+          type: integer
+        likes_count:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+
+    ArticleInput:
+      type: object
+      properties:
+        title_en:
+          type: string
+        title_ja:
+          type: string
+        slug:
+          type: string
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        content_en:
+          type: string
+        content_ja:
+          type: string
+        category_id:
+          type: string
+          format: uuid
+        thumbnail_url:
+          type: string
+        is_published:
+          type: boolean
+        is_featured:
+          type: boolean
+        read_time:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+        meta_title_en:
+          type: string
+        meta_title_ja:
+          type: string
+        meta_description_en:
+          type: string
+        meta_description_ja:
+          type: string
+      required: [title_en, title_ja, slug, description_en, description_ja, content_en, content_ja]
+
+    Education:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        institution_name:
+          type: string
+        degree_en:
+          type: string
+        degree_ja:
+          type: string
+        field_of_study_en:
+          type: string
+        field_of_study_ja:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        gpa:
+          type: number
+          format: decimal
+        max_gpa:
+          type: number
+          format: decimal
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        certificate_url:
+          type: string
+        transcript_url:
+          type: string
+        sort_order:
+          type: integer
+
+    EducationInput:
+      type: object
+      properties:
+        institution_name:
+          type: string
+        degree_en:
+          type: string
+        degree_ja:
+          type: string
+        field_of_study_en:
+          type: string
+        field_of_study_ja:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        gpa:
+          type: number
+          format: decimal
+        max_gpa:
+          type: number
+          format: decimal
+        description_en:
+          type: string
+        description_ja:
+          type: string
+        certificate_url:
+          type: string
+        transcript_url:
+          type: string
+        sort_order:
+          type: integer
+      required: [institution_name, degree_en, degree_ja, start_date]
+
+    ContactMessage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+        message:
+          type: string
+        is_read:
+          type: boolean
+        is_replied:
+          type: boolean
+        reply_message:
+          type: string
+        replied_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    ContactMessageInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+        message:
+          type: string
+      required: [name, email, message]
+
+    AnalyticsEvent:
+      type: object
+      properties:
+        event_type:
+          type: string
+        page_path:
+          type: string
+        article_id:
+          type: string
+          format: uuid
+        user_agent:
+          type: string
+        referrer:
+          type: string
+        session_id:
+          type: string
+        user_language:
+          type: string
+      required: [event_type]
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
+        has_next:
+          type: boolean
+        has_prev:
+          type: boolean
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
