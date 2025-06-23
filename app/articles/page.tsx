@@ -112,7 +112,7 @@ export default function ArticlesPage() {
                 className={
                   selectedCategory === category.id
                     ? "bg-cyan-500 hover:bg-cyan-600"
-                    : "border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10"
+                    : "bg-transparent border-cyan-400 text-cyan-400 hover:bg-white hover:text-black"
                 }
               >
                 <span className="mr-2">{category.icon}</span>
