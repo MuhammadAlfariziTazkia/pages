@@ -148,15 +148,15 @@ export default function ArticlesPage() {
                       <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
                         <div className="flex items-center gap-1">
                           <User className="w-3 h-3" />
-                          <span>{article.author}</span>
+                          <span>Muhammad Alfarizi Tazkia</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          <span>{article.publishedDate}</span>
+                          <span>{article.published_date}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          <span>{article.readTime} min</span>
+                          <span>{article.read_time} min</span>
                         </div>
                       </div>
 
