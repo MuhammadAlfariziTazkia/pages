@@ -132,7 +132,7 @@ export default function ArticlesPage() {
               transition={{ duration: 0.8, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
             >
-              <Link href={`/articles/${article.id}`}>
+              <Link href={`/articles/${article.slug}`}>
                 <Card className="bg-black/30 backdrop-blur-xl border-white/10 hover:border-cyan-400/30 transition-all duration-300 h-full cursor-pointer group">
                   <CardContent className="p-0">
                     <img
