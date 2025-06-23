@@ -33,7 +33,7 @@ export default function CategoryPage() {
   // Ambil kategori berdasarkan article.category_id
   useEffect(() => {
     const loadArticle = async () => {
-      if (category?.category_id) {
+      if (category?.id) {
         const res = await fetch("/api/articles?category_id=" + category.id);
         if (res.ok) {
           const data = await res.json();

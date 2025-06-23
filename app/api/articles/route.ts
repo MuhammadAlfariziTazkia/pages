@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const categoryId = searchParams.get('category_id')
-
+  console.log(categoryId)
   try {
     // Tanpa filter jika category_id tidak ada
     const articles = categoryId
