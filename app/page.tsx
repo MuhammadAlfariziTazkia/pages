@@ -473,10 +473,9 @@ export default function Portfolio() {
                 </Badge>
 
                 <p className="text-gray-300 mb-6">
-                  {
-                    workExperiences[selectedExperience].fullDescription[
-                      language
-                    ]
+                  {language == "en" 
+                    ? workExperiences[selectedExperience].full_description_en
+                    : workExperiences[selectedExperience].full_description_jp
                   }
                 </p>
 
