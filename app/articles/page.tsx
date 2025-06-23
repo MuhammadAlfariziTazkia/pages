@@ -38,7 +38,7 @@ export default function ArticlesPage() {
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
     const matchesCategory =
-      !selectedCategory || article.category === selectedCategory;
+      !selectedCategory || article.category_id === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
