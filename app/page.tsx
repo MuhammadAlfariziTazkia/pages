@@ -403,7 +403,7 @@ export default function Portfolio() {
                             ? exp.key_achievements_en
                             : exp.key_achievements_jp
                           )
-                            .split(",   ")
+                            .split(",,,")
                             .map((achievement: string, i: number) => (
                               <Badge
                                 key={i}
@@ -489,7 +489,7 @@ export default function Portfolio() {
                     : workExperiences[selectedExperience]
                         .detailed_achievements_jp
                   )
-                    .split(",   ")
+                    .split(",,,")
                     .map((achievement: string, i: number) => (
                       <li
                         key={i}
