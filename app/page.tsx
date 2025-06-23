@@ -551,7 +551,7 @@ export default function Portfolio() {
                       {project.is_public ? (
                         <Button
                           className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-sm"
-                          onClick={() => window.open(project.link, "_blank")}
+                          onClick={() => window.open(project.project_url, "_blank")}
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />
                           {t("visitWebsite")}
