@@ -4,10 +4,11 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export async function GET(request: NextRequest, { params }: { params: { id: bigint } }) {
-  const id = params.id
-  if (!id) {
-    return new Response(JSON.stringify({ error: 'id is required' }), {
+export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+  const slug = params.slug
+
+  if (!slug) {
+    return new Response(JSON.stringify({ error: 'Slug is required' }), {
       headers: { 'Content-Type': 'application/json' },
       status: 400,
     })
@@ -15,9 +16,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: bigi
 
   try {
     const category = await prisma.articleCategory.findUnique({
-      where: { id },
+      where: { slug },
     })
-
     if (!category) {
       return new Response(JSON.stringify({ error: 'category not found' }), {
         headers: { 'Content-Type': 'application/json' },
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: bigi
     })
   } catch (error) {
     console.error(error)
-    return new Response(JSON.stringify({ error: 'Failed to fetch article' }), {
+    return new Response(JSON.stringify({ error: 'Failed to fetch category' }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500,
     })

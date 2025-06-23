@@ -226,7 +226,7 @@ export default function Portfolio() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black px-6 sm:px-8 py-3 rounded-full"
+                  className="bg-transparent border-cyan-400 text-cyan-400 hover:bg-white hover:text-black px-6 sm:px-8 py-3 rounded-full"
                   onClick={() => scrollToSection("about")}
                 >
                   {t("learnMore")}
@@ -417,7 +417,7 @@ export default function Portfolio() {
 
                       <Button
                         variant="outline"
-                        className="w-full border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 text-sm"
+                        className="w-full bg-transparent border-cyan-400 text-cyan-400 hover:bg-white hover:text-black px-6 text-sm"
                         onClick={() => setSelectedExperience(index)}
                       >
                         {t("learnMoreBtn")}
@@ -548,7 +548,7 @@ export default function Portfolio() {
                       <p className="text-gray-300 mb-6 text-sm leading-relaxed">
                         {language == "en" ? project.description_en : project.description_jp}
                       </p>
-                      {project.isPublic ? (
+                      {project.is_public ? (
                         <Button
                           className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-sm"
                           onClick={() => window.open(project.link, "_blank")}
@@ -605,7 +605,7 @@ export default function Portfolio() {
                     viewport={{ once: true }}
                     className="flex-shrink-0 w-72 snap-start"
                   >
-                    <Link href={`/articles/category/${category.id}`}>
+                    <Link href={`/articles/category/${category.slug}`}>
                       <Card className="bg-black/30 backdrop-blur-xl border-white/10 hover:border-cyan-400/30 transition-all duration-300 h-full cursor-pointer group">
                         <CardContent className="p-6">
                           <div className="flex items-center gap-3 mb-4">
@@ -620,9 +620,6 @@ export default function Portfolio() {
                                   ? category.name_en
                                   : category.name_jp}
                               </h4>
-                              <Badge className="bg-gray-700/50 text-gray-300 border-gray-600/30 text-xs">
-                                {category.articleCount} articles
-                              </Badge>
                             </div>
                           </div>
                           <p className="text-sm text-gray-300 mb-4">
@@ -652,7 +649,7 @@ export default function Portfolio() {
               <Link href="/articles">
                 <Button
                   variant="outline"
-                  className="border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10"
+                  className="bg-transparent border-cyan-400 text-cyan-400 hover:bg-white hover:text-black"
                 >
                   {t("viewAllArticles")}
                   <ArrowRight className="w-4 h-4 ml-2" />

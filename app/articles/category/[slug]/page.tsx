@@ -12,29 +12,38 @@ import { useParams } from "next/navigation";
 
 export default function CategoryPage() {
   const params = useParams();
-  const categoryId = params.categoryId as string;
+  const slug = params.slug as string;
   const { language } = useLanguage();
   const [articles, setArticles] = useState<any[]>([]);
   const [category, setCategory] = useState<any>(null);
 
+   useEffect(() => {
+    const loadCategory = async () => {
+      const res = await fetch("/api/article-categories/" + slug);
+      if (!res.ok) return setCategory(null);
+
+      const data = await res.json();
+      setCategory(data);
+    };
+
+    if (slug) loadCategory();
+  }, [slug]);
+  
+  
+  // Ambil kategori berdasarkan article.category_id
   useEffect(() => {
-    if (categoryId) {
-      loadCategory();
-      loadArticles();
-    }
-  }, [categoryId]);
+    const loadArticle = async () => {
+      if (category?.category_id) {
+        const res = await fetch("/api/articles?category_id=" + category.id);
+        if (res.ok) {
+          const data = await res.json();
+          setArticles(data);
+        }
+      }
+    };
 
-  const loadArticles = async () => {
-    setArticles(
-      await (await fetch("/api/articles?category_id=" + categoryId)).json()
-    );
-  };
-
-  const loadCategory = async () => {
-    setCategory(
-      await (await fetch("/api/article-categories/" + categoryId)).json()
-    );
-  };
+    loadArticle();
+  }, [category]); // akan jalan hanya jika `article` berubah
 
   if (!category) {
   return (
@@ -119,7 +128,7 @@ export default function CategoryPage() {
               transition={{ duration: 0.8, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
             >
-              <Link href={`/articles/${article.id}`}>
+              <Link href={`/articles/${article.slug}`}>
                 <Card className="bg-black/30 backdrop-blur-xl border-white/10 hover:border-cyan-400/30 transition-all duration-300 h-full cursor-pointer group">
                   <CardContent className="p-0">
                     <img

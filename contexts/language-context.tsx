@@ -54,7 +54,7 @@ const translations = {
     tensorflowCert: "TensorFlow Developer Certifications",
 
     // Articles Section
-    articlesTitle: "Latest Articles",
+    articlesTitle: "Articles",
     viewAllArticles: "View All Articles",
     readMore: "Read More",
     postedBy: "Posted by",
@@ -111,7 +111,7 @@ const translations = {
     tensorflowCert: "TensorFlow開発者認定",
 
     // Articles Section
-    articlesTitle: "最新記事",
+    articlesTitle: "記事",
     viewAllArticles: "すべての記事を見る",
     readMore: "続きを読む",
     postedBy: "投稿者",
