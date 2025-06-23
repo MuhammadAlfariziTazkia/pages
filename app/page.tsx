@@ -400,8 +400,8 @@ export default function Portfolio() {
                         </h5>
                         <div className="flex flex-wrap gap-1">
                           {(language == "en"
-                            ? exp.keyAchievements_en
-                            : exp.keyAchievements_jp
+                            ? exp.key_achievements_en
+                            : exp.key_achievements_jp
                           )
                             .split(", ")
                             .map((achievement: string, i: number) => (
