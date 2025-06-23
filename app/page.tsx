@@ -681,7 +681,7 @@ export default function Portfolio() {
                         />
                         <div className="p-6">
                           <h4 className="text-lg font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors mb-2 line-clamp-2">
-                            {language == "en" ? article.title_en : article.title_jp}{process.env.NEXT_PUBLIC_BACKEND}
+                            {language == "en" ? article.title_en : article.title_jp}
                           </h4>
 
                           <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
