@@ -79,7 +79,7 @@ export default function ArticlePage() {
         >
           {/* Thumbnail */}
           <img
-            src={article.thumbnail || "/placeholder.svg"}
+            src={process.env.NEXT_PUBLIC_BACKEND + article.thumbnail || "/placeholder.svg"}
             alt={language == "en" ? article.title_en : article.title_jp}
             className="w-full h-64 sm:h-80 object-cover rounded-lg mb-6"
           />
