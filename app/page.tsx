@@ -675,7 +675,7 @@ export default function Portfolio() {
                     <Card className="bg-black/30 backdrop-blur-xl border-white/10 hover:border-cyan-400/30 transition-all duration-300 h-full cursor-pointer group">
                       <CardContent className="p-0">
                         <img
-                          src={process.env.NEXT_PUBLIC_BACKEND + article.thumbnail || "/placeholder.svg"}
+                          src={article.thumbnail || "/placeholder.svg"}
                           alt={language == "en" ? article.title_en : article.title_jp}
                           className="w-full h-48 object-cover rounded-t-lg"
                         />
