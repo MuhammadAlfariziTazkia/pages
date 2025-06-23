@@ -31,7 +31,7 @@ const socialLinks = [
   { icon: Linkedin, href: "https://www.linkedin.com/in/muhammad-alfarizi-tazkia/", label: "LinkedIn" },
   { icon: Instagram, href: "https://www.instagram.com/muhammadalfarizi.t/", label: "Instagram" },
   { icon: Mail, href: "mailto:muhammadalfarizi.t@gmail.com", label: "Email" },
-  { icon: Youtube, href: "#", label: "YouTube" },
+  { icon: Youtube, href: "https://www.youtube.com/channel/UCC8q6Y0X0vVlulv4ImKok3A", label: "YouTube" },
 ]
 
 export default function Portfolio() {
