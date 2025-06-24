@@ -27,12 +27,28 @@ import { useLanguage } from "@/contexts/language-context";
 import Link from "next/link";
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com/MuhammadAlfariziTazkia", label: "GitHub" },
-  { icon: Linkedin, href: "https://www.linkedin.com/in/muhammad-alfarizi-tazkia/", label: "LinkedIn" },
-  { icon: Instagram, href: "https://www.instagram.com/muhammadalfarizi.t/", label: "Instagram" },
+  {
+    icon: Github,
+    href: "https://github.com/MuhammadAlfariziTazkia",
+    label: "GitHub",
+  },
+  {
+    icon: Linkedin,
+    href: "https://www.linkedin.com/in/muhammad-alfarizi-tazkia/",
+    label: "LinkedIn",
+  },
+  {
+    icon: Instagram,
+    href: "https://www.instagram.com/muhammadalfarizi.t/",
+    label: "Instagram",
+  },
   { icon: Mail, href: "mailto:muhammadalfarizi.t@gmail.com", label: "Email" },
-  { icon: Youtube, href: "https://www.youtube.com/channel/UCC8q6Y0X0vVlulv4ImKok3A", label: "YouTube" },
-]
+  {
+    icon: Youtube,
+    href: "https://www.youtube.com/channel/UCC8q6Y0X0vVlulv4ImKok3A",
+    label: "YouTube",
+  },
+];
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("home");
@@ -56,19 +72,14 @@ export default function Portfolio() {
 
   const fetchAllData = async () => {
     try {
-      const [
-        skillsRes,
-        workExpRes,
-        projectsRes,
-        categoriesRes,
-        articlesRes,
-      ] = await Promise.all([
-        fetch("/api/skills"),
-        fetch("/api/work-experiences"),
-        fetch("/api/projects"),
-        fetch("/api/article-categories"),
-        fetch("/api/articles"),
-      ]);
+      const [skillsRes, workExpRes, projectsRes, categoriesRes, articlesRes] =
+        await Promise.all([
+          fetch("/api/skills"),
+          fetch("/api/work-experiences"),
+          fetch("/api/projects"),
+          fetch("/api/article-categories"),
+          fetch("/api/articles"),
+        ]);
 
       const [
         skillsData,
@@ -177,10 +188,10 @@ export default function Portfolio() {
       {/* Hero Section */}
       <section
         id="home"
-        className="min-h-screen flex items-center justify-center pt-20 px-4 sm:px-6"
+        className="min-h-screen flex items-center justify-center pt-20 px-4 sm:px-6 lg:px-12 xl:px-20"
       >
-        <div className="container mx-auto">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="container mx-auto max-w-screen-xl">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center lg:py-12 xl:py-16">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: isLoaded ? 1 : 0, x: isLoaded ? 0 : -50 }}
@@ -391,7 +402,9 @@ export default function Portfolio() {
                       </div>
 
                       <p className="text-sm text-gray-300 mb-4 line-clamp-3">
-                        {language == "en" ? exp.description_en : exp.description_jp}
+                        {language == "en"
+                          ? exp.description_en
+                          : exp.description_jp}
                       </p>
 
                       <div className="mb-4">
@@ -449,13 +462,17 @@ export default function Portfolio() {
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-2xl font-bold text-cyan-400">
-                      {language == "en" ? workExperiences[selectedExperience].position_en : workExperiences[selectedExperience].position_jp}
+                      {language == "en"
+                        ? workExperiences[selectedExperience].position_en
+                        : workExperiences[selectedExperience].position_jp}
                     </h3>
                     <h4 className="text-xl text-white">
                       {workExperiences[selectedExperience].company}
                     </h4>
                     <p className="text-gray-400">
-                      {language == "en" ? workExperiences[selectedExperience].type_en : workExperiences[selectedExperience].type_jp}
+                      {language == "en"
+                        ? workExperiences[selectedExperience].type_en
+                        : workExperiences[selectedExperience].type_jp}
                     </p>
                   </div>
                   <Button
@@ -473,10 +490,9 @@ export default function Portfolio() {
                 </Badge>
 
                 <p className="text-gray-300 mb-6">
-                  {language == "en" 
+                  {language == "en"
                     ? workExperiences[selectedExperience].full_description_en
-                    : workExperiences[selectedExperience].full_description_jp
-                  }
+                    : workExperiences[selectedExperience].full_description_jp}
                 </p>
 
                 <h5 className="text-lg font-semibold text-cyan-400 mb-4">
@@ -546,12 +562,16 @@ export default function Portfolio() {
                         {language == "en" ? project.role_en : project.role_jp}
                       </p>
                       <p className="text-gray-300 mb-6 text-sm leading-relaxed">
-                        {language == "en" ? project.description_en : project.description_jp}
+                        {language == "en"
+                          ? project.description_en
+                          : project.description_jp}
                       </p>
                       {project.is_public ? (
                         <Button
                           className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-sm"
-                          onClick={() => window.open(project.project_url, "_blank")}
+                          onClick={() =>
+                            window.open(project.project_url, "_blank")
+                          }
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />
                           {t("visitWebsite")}
@@ -672,12 +692,18 @@ export default function Portfolio() {
                       <CardContent className="p-0">
                         <img
                           src={article.thumbnail || "/placeholder.svg"}
-                          alt={language == "en" ? article.title_en : article.title_jp}
+                          alt={
+                            language == "en"
+                              ? article.title_en
+                              : article.title_jp
+                          }
                           className="w-full h-48 object-cover rounded-t-lg"
                         />
                         <div className="p-6">
                           <h4 className="text-lg font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors mb-2 line-clamp-2">
-                            {language == "en" ? article.title_en : article.title_jp}
+                            {language == "en"
+                              ? article.title_en
+                              : article.title_jp}
                           </h4>
 
                           <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
@@ -696,7 +722,9 @@ export default function Portfolio() {
                           </div>
 
                           <p className="text-sm text-gray-300 mb-4 line-clamp-3">
-                            {language == "en" ? article.description_en : article.description_jp}
+                            {language == "en"
+                              ? article.description_en
+                              : article.description_jp}
                           </p>
 
                           <div className="flex items-center text-cyan-400 text-sm group-hover:text-cyan-300 transition-colors">
