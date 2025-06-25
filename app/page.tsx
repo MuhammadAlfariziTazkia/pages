@@ -34,7 +34,7 @@ const socialLinks = [
   },
   {
     icon: Linkedin,
-    href: "https://www.linkedin.com/in/muhammad-alfarizi-tazkia/",
+    href: "https://www.linkedin.com/in/muhammadalfarizitazkia/",
     label: "LinkedIn",
   },
   {
